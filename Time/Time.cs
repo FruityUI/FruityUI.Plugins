@@ -62,19 +62,11 @@ namespace Time
                 TextWrapping = TextWrapping.Wrap
             };
 
-            time.BeginInit();
-
-
             panel.Children.Add(time);
-
-            tWindow.Content = panel;
             
             time.Text = "Hey! Developed by LegitSoulja :)";
-            time.Visibility = Visibility.Visible;
-            time.BringIntoView();
+
             panel.UpdateLayout();
-            time.UpdateLayout();
-            tWindow.UpdateLayout();
 
             timer = new System.Timers.Timer(1000);
             timer.Enabled = true;
@@ -87,9 +79,10 @@ namespace Time
                 });
             };
 
-            timer.Start();
-
+            tWindow.Content = panel;
             tWindow.Show();
+
+            timer.Start();
 
         }
 
@@ -100,6 +93,8 @@ namespace Time
 
         public void Dispose()
         {
+            timer.Stop();
+            timer.Dispose();
             GC.SuppressFinalize(this);
         }
 
