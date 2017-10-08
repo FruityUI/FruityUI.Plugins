@@ -15,7 +15,7 @@ using System.Timers;
 namespace CPU
 {
 
-    public class CPU : System.Timers.Timer, IPlugin, IDisposable
+    public class CPU : IPlugin, IDisposable
     {
 
         public string author { get { return "LegitSoulja"; } }
@@ -29,7 +29,7 @@ namespace CPU
         private PerformanceCounter cpu = new PerformanceCounter("Processor", "% Processor Time", "_Total");
         private PerformanceCounter ram = new PerformanceCounter("Memory", "Available MBytes");
 
-        public CPU(Core _core) : base(1000)
+        public CPU(Core _core)
         {
 
             try
@@ -38,7 +38,6 @@ namespace CPU
                 w = core.createNewWindow(name, 200, 200, core.screen_width - 200, 20, true);
                 w.Background = new SolidColorBrush(Colors.Transparent);
 
-                Enabled = true;
 
                 StackPanel panel = new StackPanel()
                 {
@@ -63,7 +62,7 @@ namespace CPU
 
                 panel.UpdateLayout();
 
-                Elapsed += (s, e) =>
+                core.onSecond += (s, e) =>
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
@@ -73,7 +72,6 @@ namespace CPU
 
                 w.Content = panel;
                 w.Show();
-                Start();
             }catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -87,10 +85,8 @@ namespace CPU
             Dispose();
         }
 
-        public new void Dispose()
+        public void Dispose()
         {
-            Stop();
-            base.Dispose();
             GC.SuppressFinalize(this);
         }
 

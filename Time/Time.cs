@@ -14,8 +14,6 @@ using System.Windows.Media.Effects;
 namespace Time
 {
 
-
-
     public class Time : IPlugin, IDisposable
     {
 
@@ -30,7 +28,6 @@ namespace Time
         protected static Core core;
 
         private Window tWindow;
-        private System.Timers.Timer timer;
 
         public Time(Core _core)
         {
@@ -68,10 +65,7 @@ namespace Time
 
             panel.UpdateLayout();
 
-            timer = new System.Timers.Timer(1000);
-            timer.Enabled = true;
-
-            timer.Elapsed += (s, e) =>
+            core.onSecond += (s, e) =>
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
@@ -82,8 +76,6 @@ namespace Time
             tWindow.Content = panel;
             tWindow.Show();
 
-            timer.Start();
-
         }
 
         ~Time()
@@ -93,8 +85,6 @@ namespace Time
 
         public void Dispose()
         {
-            timer.Stop();
-            timer.Dispose();
             GC.SuppressFinalize(this);
         }
 
